@@ -3,6 +3,7 @@
 namespace App\Database;
 
 use PDO;
+use App\Utils\Path;
 
 class DB {
     private static ?PDO $instance = NULL;
@@ -10,7 +11,7 @@ class DB {
 
     public static function getConnection(): PDO {
         if (self::$instance === NULL) {
-            $path = __DIR__ . self::preparePath(self::$db_path);
+            $path = __DIR__ . Path::preparePath(self::$db_path);
             self::$instance = new PDO('sqlite:' . $path);
             self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             self::$instance->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -25,12 +26,5 @@ class DB {
 )           ');
         }
         return self::$instance;
-    }
-
-    public static function preparePath(string $path): string {
-        if (PHP_OS_FAMILY === 'Windows') {
-            str_replace('/', DIRECTORY_SEPARATOR, $path);
-        }
-        return $path;
     }
 }
