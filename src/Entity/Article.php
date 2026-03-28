@@ -24,8 +24,15 @@ class Article implements ArticleContract {
         return $this;
     }
 
-    public function addArticles(array $articles): array {
+    public function length(): int {
+        return count($this->articles);
+    }
+    public function addArticles(array $articles, $self = true): self|array {
         $this->articles = array_merge($this->articles, $articles);
+        return ($self) ? $this : $this->articles;
+    }
+
+    public function getAllArticles(): array {
         return $this->articles;
     }
 

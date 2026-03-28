@@ -2,16 +2,19 @@
 
 namespace App\Service;
 
+use App\Utils\Path;
+
 class CSVService
 {
-    private string $path = __DIR__ . '/../../data/articles.csv';
+    private string $path;
     private array $headers = ['Title', 'Author', 'Content', 'Url', 'Created At'];
     private array $data = [];
 
     public function __construct(?string $path = null) {
-        if ($path) {
-            $this->path = $path;
-        }
+        $this->path = Path::preparePath(($path)
+            ? $path
+            : __DIR__ . '/../../data/articles.csv'
+        );
     }
 
     public function add(array $data): self {
