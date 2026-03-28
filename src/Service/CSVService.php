@@ -2,19 +2,16 @@
 
 namespace App\Service;
 
-use App\Utils\Path;
-
 class CSVService
 {
-    private string $path;
+    private string $path = __DIR__ . '/../../data/articles.csv';
     private array $headers = ['Title', 'Author', 'Content', 'Url', 'Created At'];
     private array $data = [];
 
     public function __construct(?string $path = null) {
-        $this->path = Path::preparePath(($path)
-            ? $path
-            : __DIR__ . '/../../data/articles.csv'
-        );
+        if ($path) {
+            $this->path = $path;
+        }
     }
 
     public function add(array $data): self {
@@ -35,13 +32,12 @@ class CSVService
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
-        $mode = (file_exists($this->path)) ? 'a' : 'w';
-        $handle = fopen($this->path, $mode);
+        $handle = fopen($this->path, 'w');
         if (!empty($this->headers)) {
-            fputcsv($handle, $this->headers);
+            fputcsv($handle, $this->headers, ",", "\"", "\\");
         }
         foreach ($this->data as $row) {
-            fputcsv($handle, $row);
+            fputcsv($handle, $row, ",", "\"", "\\");
         }
         fclose($handle);
     }
@@ -52,8 +48,8 @@ class CSVService
             return $data;
         }
         if (($handle = fopen($this->path, "r")) !== FALSE) {
-            $csvHeaders = fgetcsv($handle); 
-            while (($row = fgetcsv($handle)) !== FALSE) {
+            $csvHeaders = fgetcsv($handle, 0, ",", "\"", "\\"); 
+            while (($row = fgetcsv($handle, 0, ",", "\"", "\\")) !== FALSE) {
                 if (count($this->headers) === count($row)) {
                     $data[] = array_combine($this->headers, $row);
                 } else {

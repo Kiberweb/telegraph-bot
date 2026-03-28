@@ -9,8 +9,15 @@ class TelegraphService
 {
     private Client $client;
 
-    public function __construct() {
-        $this->client = Client::createChromeClient();
+    /**
+     * @param string|null $externalDriverUrl Наприклад 'http://localhost:9515'
+     */
+    public function __construct(?string $externalDriverUrl = null) {
+        if ($externalDriverUrl) {
+            $this->client = Client::createSeleniumClient($externalDriverUrl);
+        } else {
+            $this->client = Client::createChromeClient();
+        }
     }
 
     public function publish(Article $article): string {
@@ -19,42 +26,21 @@ class TelegraphService
 
         $this->client->executeScript("
             (function(title, author, content) {
-                if (typeof quill === 'undefined') {
-                    throw new Error('Quill is not initialized');
-                }
+                if (typeof quill === 'undefined') return;
 
-                // 1. Повністю очищуємо редактор
-                quill.deleteText(0, quill.getLength(), 'silent');
+                quill.setText('');
+                quill.insertText(0, title + '\\n', 'user');
+                quill.formatLine(0, title.length, 'blockTitle', true);
 
-                // 2. Вставляємо заголовок і форматуємо його як blockTitle
-                // Додаємо символ переведення рядка, щоб розділити блоки
-                quill.insertText(0, title + '\\n', 'silent');
-                quill.formatLine(0, 1, 'blockTitle', true, 'silent');
-
-                // 3. Вставляємо автора і форматуємо як blockAuthor
                 var authorPos = title.length + 1;
-                quill.insertText(authorPos, author + '\\n', 'silent');
-                quill.formatLine(authorPos, 1, 'blockAuthor', true, 'silent');
+                quill.insertText(authorPos, author + '\\n', 'user');
+                quill.formatLine(authorPos, author.length, 'blockAuthor', true);
 
-                // 4. Вставляємо основний контент
                 var contentPos = authorPos + author.length + 1;
-                quill.clipboard.dangerouslyPasteHTML(contentPos, content, 'silent');
+                quill.clipboard.dangerouslyPasteHTML(contentPos, content, 'user');
                 
-                // 5. Оновлюємо внутрішній стан та викликаємо системну валідацію
                 quill.update('user');
-                
-                // Додатково перевіряємо чи jQuery бачить текст (для функції savePage)
-                var titleEl = document.querySelector('h1');
-                if (titleEl && titleEl.innerText.length < 2) {
-                    titleEl.innerText = title;
-                }
-
-                // 6. Викликаємо нативне збереження
-                if (typeof savePage === 'function') {
-                    savePage();
-                } else {
-                    document.getElementById('_publish_button').click();
-                }
+                if (typeof draftSave === 'function') draftSave();
             })(arguments[0], arguments[1], arguments[2]);
         ", [
             $article->title,
@@ -63,17 +49,31 @@ class TelegraphService
         ]);
 
         $article->createdAt = date('Y-m-d H:i:s');
+        
+        // Даємо час на внутрішню валідацію Telegra.ph
+        usleep(500000);
+
+        // Натискаємо кнопку Publish
+        $this->client->executeScript("
+            var btn = document.getElementById('_publish_button');
+            if (btn) btn.click();
+        ");
 
         try {
-            // Очікуємо перенаправлення або появу кнопки Edit
-            $this->client->waitFor('#_edit_button', 20);
+            // 1. Чекаємо, поки з'явиться кнопка Edit
+            $this->client->waitFor('#_edit_button', 15);
             
-            $url = $this->client->getCurrentURL();
-            if ($url === 'https://telegra.ph/') {
-                throw new \Exception("Публікація начебто пройшла, але URL залишився головним.");
-            }
-            
-            return $url;
+            // 2. ДОДАТКОВО чекаємо, поки URL зміниться з головної на сторінку статті
+            $this->client->wait(10)->until(function ($driver) {
+                $url = $driver->getCurrentURL();
+                return (
+                    $url !== 'https://telegra.ph/' && 
+                    $url !== 'https://telegra.ph' && 
+                    str_contains($url, 'telegra.ph/')
+                );
+            });
+
+            return $this->client->getCurrentURL();
         } catch (\Throwable $e) {
             $errorMsg = $this->client->executeScript("
                 var err = document.getElementById('_error_msg');

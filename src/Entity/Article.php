@@ -24,25 +24,24 @@ class Article implements ArticleContract {
         return $this;
     }
 
-    public function setUrl(string $url): self {
+    public function setUrl(?string $url): self {
         $this->url = $url;
         return $this;
     }
 
-    public function addInArray(array $article): self
-    {
-        return $this->add(
-            $article['title'],
-            $article['author'],
-            $article['content'],
-            $article['url'],
-            $article['createdAt']
-        );
+    public function addInArray(array $data): self {
+        $this->title = $data['title'] ?? $this->title;
+        $this->author = $data['author'] ?? $this->author;
+        $this->content = $data['content'] ?? $this->content;
+        $this->url = $data['url'] ?? $this->url;
+        $this->createdAt = $data['created_at'] ?? $this->createdAt;
+        return $this;
     }
 
     public function length(): int {
         return count($this->articles);
     }
+
     public function addArticles(array $articles, $self = true): self|array {
         $this->articles = array_merge($this->articles, $articles);
         return ($self) ? $this : $this->articles;
