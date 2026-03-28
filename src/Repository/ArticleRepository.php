@@ -2,15 +2,15 @@
 
 namespace App\Repository;
 
-use PDO;
 use App\Contract\ArticleContract;
+use PDO;
 
-class PublicationRepository
+class ArticleRepository
 {
     public function __construct(private PDO $db) {}
 
     public function save(ArticleContract $article ): bool {
-        $stmt = $this->db->prepare("INSERT INTO articles (title, author, content, url, date) VALUES (?,?,?,?,?)");
+        $stmt = $this->db->prepare("INSERT INTO publications (title, author, content, url, date) VALUES (?,?,?,?,?)");
         return $stmt->execute($article->getArticleData());
     }
 }

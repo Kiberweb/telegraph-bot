@@ -20,7 +20,7 @@ class DB {
                 title TEXT NOT NULL,
                 author TEXT NULL,
                 content TEXT NULL,
-                uri TEXT NULL,
+                url TEXT NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP  
 )           ');
         }
