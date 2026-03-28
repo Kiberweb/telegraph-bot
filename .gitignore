@@ -1,2 +1,5 @@
-.idea
-rust/
+.idea/
+/rust/
+*.iml
+.vscode/
+.zed/
