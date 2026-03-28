@@ -1,0 +1,40 @@
+<?php
+require_once __DIR__ . "vendor/autoload.php";
+use Symfony\Component\Panther\Client;
+// add database
+$articles = [
+    ['title' => '', 'author' => '', 'content' => '', 'url' => '', 'date' => ''],
+    ['title' => '', 'author' => '', 'content' => '', 'url' => '', 'date' => ''],
+    ['title' => '', 'author' => '', 'content' => '', 'url' => '', 'date' => ''],
+    ['title' => '', 'author' => '', 'content' => '', 'url' => '', 'date' => ''],
+];
+
+$client = Client::createChromeClient();
+foreach ($articles as $article) {
+    $crawler = $client->request('GET', 'https://telegra.ph');
+    $client->waitFor('h1');
+    # article title
+    $client->executeScript('document.querySelector("h1").innerText = "' . $article['title'] . '";');
+    # author
+    $client->executeScript('document.querySelector("address[data-label=\'Author\']").innerText = "' . $article['author'] . '";');
+    # content
+    $client->executeScript('div.ql-editor p[data-placeholder=\'Your story...\']").innerText = "' . $article['content'] . '";');
+    $client->click('#_publish_button');
+    $client->waitFor("#_edit_button");
+    $url = $client->getCurrentURL();
+    $date = date('Y-m-d H:i:s');
+    #CSV
+    $csvFile = 'result.csv';
+    $fileInfo = !file_exists($csvFile);
+    $handle = fopen($csvFile, 'a');
+    if ($fileInfo) {
+        fputcsv($handle, ['Title', 'Author', 'Content', '', 'Date']);
+    }
+    fputcsv($handle, [$article['title'], $article['author'], $article['content'], $url, $date]);
+    fclose($handle);
+    echo 'Опубліковано:' . $url . PHP_EOL;
+}
+$client->quit();
+
+
+
