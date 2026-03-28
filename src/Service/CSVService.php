@@ -2,19 +2,16 @@
 
 namespace App\Service;
 
-use App\Entity\Article;
-
 class CSVService
 {
     private string $path = __DIR__ . '/../../data/articles.csv';
-    private bool $fileExists = false;
-    private $handle;
-    private array $headers = ['Title', 'Author', 'Content', 'Url', 'Date'];
+    private array $headers = ['Title', 'Author', 'Content', 'Url', 'Created At'];
     private array $data = [];
 
-    public function __construct() {
-        $this->fileExists = !file_exists($this->path);
-        $this->handle = fopen($this->path, 'a');
+    public function __construct(?string $path = null) {
+        if ($path) {
+            $this->path = $path;
+        }
     }
 
     public function add(array $data): self {
@@ -22,18 +19,55 @@ class CSVService
         return $this;
     }
 
-    public function write(): void
-    {
-        foreach ($this->data as $row) {
-            fputcsv($this->handle, $row);
+    public function addRows(array $rows): self {
+        foreach ($rows as $row) {
+            $this->add($row);
         }
-        fclose($this->handle);
+        return $this;
     }
 
-    public function getHeaders(): self {
-        if ($this->fileExists) {
-            fputcsv($this->handle, $this->headers);
+    public function write(): void
+    {
+        $dir = dirname($this->path);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
         }
+        $mode = (file_exists($this->path)) ? 'a' : 'w';
+        $handle = fopen($this->path, $mode);
+        if (!empty($this->headers)) {
+            fputcsv($handle, $this->headers);
+        }
+        foreach ($this->data as $row) {
+            fputcsv($handle, $row);
+        }
+        fclose($handle);
+    }
+
+    public function read(): array {
+        $data = [];
+        if (!file_exists($this->path)) {
+            return $data;
+        }
+        if (($handle = fopen($this->path, "r")) !== FALSE) {
+            $csvHeaders = fgetcsv($handle); 
+            while (($row = fgetcsv($handle)) !== FALSE) {
+                if (count($this->headers) === count($row)) {
+                    $data[] = array_combine($this->headers, $row);
+                } else {
+                    $data[] = $row;
+                }
+            }
+            fclose($handle);
+        }
+        return $data;
+    }
+
+    public function getPath(): string {
+        return $this->path;
+    }
+
+    public function setPath(string $path): self {
+        $this->path = $path;
         return $this;
     }
 
