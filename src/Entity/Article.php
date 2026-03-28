@@ -4,17 +4,17 @@ namespace App\Entity;
 
 use App\Contract\ArticleContract;
 
-class Article {
+class Article implements ArticleContract {
     private array $articles = [];
-    public string $title;
-    public string $author;
-    public ?string $content = NULL;
-    public ?string $url = NULL;
-    public ?string $createdAt = NULL;
+    public ?string $title = null;
+    public ?string $author = null;
+    public ?string $content = null;
+    public ?string $url = null;
+    public ?string $createdAt = null;
 
     public function __construct() {}
 
-    public function add(string $title, string $author, string $content = NULL, string $url = NULL, string $createdAt = NULL): self {
+    public function add(string $title, string $author, string $content = null, string $url = null, string $createdAt = null): self {
         $this->title = $title;
         $this->author = $author;
         $this->content = $content;
@@ -25,13 +25,17 @@ class Article {
     }
 
     public function addArticles(array $articles): array {
-        array_push($this->articles, $articles);
+        $this->articles = array_merge($this->articles, $articles);
         return $this->articles;
     }
 
     public function getArticleData(): array {
-        $items = get_object_vars($this);
-        unset($items['articles']);
-        return $items;
+        return [
+            'title' => $this->title,
+            'author' => $this->author,
+            'content' => $this->content,
+            'url' => $this->url,
+            'created_at' => $this->createdAt,
+        ];
     }
 }
