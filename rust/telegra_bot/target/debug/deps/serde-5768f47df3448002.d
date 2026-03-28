@@ -1,0 +1,14 @@
+/home/yaroslav/Workspace/Work/Telegra.ph/rust/telegra_bot/target/debug/deps/serde-5768f47df3448002.d: /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/yaroslav/Workspace/Work/Telegra.ph/rust/telegra_bot/target/debug/build/serde-22fe44f709a7cb0f/out/private.rs
+
+/home/yaroslav/Workspace/Work/Telegra.ph/rust/telegra_bot/target/debug/deps/libserde-5768f47df3448002.rlib: /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/yaroslav/Workspace/Work/Telegra.ph/rust/telegra_bot/target/debug/build/serde-22fe44f709a7cb0f/out/private.rs
+
+/home/yaroslav/Workspace/Work/Telegra.ph/rust/telegra_bot/target/debug/deps/libserde-5768f47df3448002.rmeta: /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/yaroslav/Workspace/Work/Telegra.ph/rust/telegra_bot/target/debug/build/serde-22fe44f709a7cb0f/out/private.rs
+
+/home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs:
+/home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs:
+/home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs:
+/home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs:
+/home/yaroslav/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs:
+/home/yaroslav/Workspace/Work/Telegra.ph/rust/telegra_bot/target/debug/build/serde-22fe44f709a7cb0f/out/private.rs:
+
+# env-dep:OUT_DIR=/home/yaroslav/Workspace/Work/Telegra.ph/rust/telegra_bot/target/debug/build/serde-22fe44f709a7cb0f/out
